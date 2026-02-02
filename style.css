@@ -67,9 +67,9 @@ body{
   position: relative;
   display: grid;
   place-items: center;
-  margin: 14px 0;
+  margin: 100px 0;
   padding: 18px;
-  overflow: hidden;
+  overflow: visible;
 }
 
 /* Corner chrome */
@@ -80,10 +80,6 @@ body{
   pointer-events:none;
 }
 
-.cover-frame{
-  position: relative;
-  width: min(78vw, 360px);
-}
 .cover{
   display: grid;
   gap: 10px;
@@ -215,61 +211,98 @@ body{
   text-shadow: 0 0 10px rgba(0,0,0,.5);
 }
 
-/* ===== Mobile: prevent overlay by docking buttons into a grid below the cover image ===== */
+/* ===== Mobile: video first, buttons stacked, no weird grid leftovers ===== */
 @media (max-width: 520px){
 
-  /* Give the cover frame a little breathing room so nothing clips */
+  /* Make hero padding tighter so video looks larger */
+  .hero{ padding: 10px; }
+
   .cover-frame{
-    width: min(86vw, 360px);
+    width: min(640px, 94vw);
+    margin-bottom: 10px;
+    margin: 0 auto;
+    display: grid;
+    grid-template-columns: 1fr;
+    grid-template-areas:
+      "vid"
+      "spotify"
+      "apple"
+      "yt";
+    gap: 10px;
   }
 
-  /* Stop absolute positioning on mobile */
+  .cover-embed{
+    grid-area: vid;
+    width: 100%;
+    aspect-ratio: 4 / 3;
+    border-radius: 18px;
+  }
+
   .chip{
-    position: static;
+    position: static !important;
     transform: none !important;
     width: 100%;
     justify-content: center;
     box-shadow: 2px 2px 0 #000;
   }
 
-  /* Create a tight 2x2 button grid under the image */
-  .cover-frame{
-    display: grid;
-    grid-template-columns: 1fr 1fr;
-    grid-template-areas:
-      "img img"
-      "spotify apple"
-      "yt all";
-    gap: 8px;
-    align-items: stretch;
-  }
-
-  /* Center items inside each grid cell */
-  .cover-frame{
-    justify-items: center;
-  }
-
-  /* Make buttons hug content instead of stretching */
-  .chip{
-    width: auto;
-    min-width: 140px;
-  }
-
-  .cover-frame img{ grid-area: img; }
-
-  .chip-top,
-  .chip-left,
-  .chip-right,
-  .chip-bottom{
-    grid-column: 1 / -1;
-    justify-self: center;
-    width: auto;
-    min-width: 180px;
-  }
-
-  /* Keep caption below, clean */
-  .caption{
-    margin-top: 6px;
-  }
+  .chip-top{ grid-area: spotify; }
+  .chip-left{ grid-area: apple; }
+  .chip-right{ grid-area: yt; }
 }
 
+
+/* ===========================
+   FINAL: Responsive 640x480 (4:3) embed + clean mobile layout
+=========================== */
+
+/* Frame: center and constrain width */
+.cover-frame{
+  position: relative;
+  width: min(640px, 92vw);    /* 640 desktop, scales down on mobile */
+  margin: 0 auto;
+}
+
+/* Video: 4:3, responsive */
+.cover-embed{
+  width: 100%;
+  aspect-ratio: 4 / 3;        /* 640x480 vibe but fluid */
+  display: block;
+  border: 3px solid var(--border);
+  border-radius: 18px;
+  background: #000;
+  margin-bottom: 10px;
+}
+
+/* Desktop chips: keep absolute around the video */
+.chip{ z-index: 10; }
+
+/* MOBILE: stack buttons under video neatly */
+@media (max-width: 520px){
+
+  .cover-frame{
+    display: grid;
+    grid-template-columns: 1fr;
+    grid-template-areas:
+      "vid"
+      "spotify"
+      "apple"
+      "yt";
+    gap: 10px;
+    width: 100%; /* not 100vw (prevents overflow) */
+  }
+
+  .cover-embed{ grid-area: vid; }
+
+  .chip{
+    position: static !important;
+    transform: none !important;
+    width: 100%;
+    justify-content: center;
+    box-shadow: 2px 2px 0 #000;
+  }
+
+  .chip-top{ grid-area: spotify; }
+  .chip-left{ grid-area: apple; }
+  .chip-right{ grid-area: yt; }
+}
