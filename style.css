@@ -232,11 +232,15 @@ body{
   }
 
   .cover-embed{
-    grid-area: vid;
-    width: 100%;
-    aspect-ratio: 4 / 3;
-    border-radius: 18px;
-  }
+  width: 100%;
+  aspect-ratio: 1 / 1;   /* square cover art */
+  display: block;
+  border: 3px solid var(--border);
+  border-radius: 18px;
+  object-fit: cover;
+  background: #000;
+  margin-bottom: 10px;
+}
 
   .chip{
     position: static !important;
